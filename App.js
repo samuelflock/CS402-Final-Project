@@ -1,14 +1,19 @@
-
 // Import packages
 import React, {useState, useEffect} from 'react';
 import {Alert, Dimensions, VirtualizedList, TouchableOpacity, Button, FlatList, StyleSheet, Text, View} from 'react-native';
-import {Item} from './components/ListItem.js';
-import {loadList, saveList} from './components/RemoteAccess.js';
 import MapView from 'react-native-maps';
 import {Marker} from 'react-native-maps';
 import {useWindowDimensions} from 'react-native';
 import DialogInput from 'react-native-dialog-input';
 import Geocoder from 'react-native-geocoding';
+
+// Import local js files
+import {Item} from './js/ListItem.js';
+import {loadList, saveList} from './js/RemoteAccess.js';
+
+// Import styles
+import {mainStyles} from './css/main.css';
+import {hikeListStyles} from './css/hikeList.css';
 
 
 
@@ -16,45 +21,53 @@ import Geocoder from 'react-native-geocoding';
 var emptyData = [];
 Geocoder.init("AIzaSyDqW8jK0xxnIRKTKXACxIK-q3UerQTiCsA");
 
-// Create main body of application
+// declare virtualList App object
 const MapList = () => {
-  // Declare dynamic variables
-  const[list, setList] = useState([]);
-  const[autoNav, setNav] = useState(true);
-  const[aShowMe, setShowMe] = useState(false);
+
+  // State var's
+  const[list, setlist] = useState([]);
+  const[autonav, setnav] = useState(true);
+  const[ashowme, setshowme] = useState(false);
 
   // locations
-  var blist = <Marker coordinate = {{latitude: 40.78825, longitude: -122.4324}}
-                      title={"place1"}
-                      description={"description"}/>;
+  var blist = <Marker
+                coordinate = {{latitude: 40.78825,
+                              longitude: -122.4324}}
+                title={"place1"}
+                description={"description"}
+              />
 
-  var mboise = <Marker  coordinate = {{latitude: 37.78825, longitude: -122.4324}}
-                        title={"place2"}
-                        description={"description"}/>;
+  var mboise = <Marker
+                coordinate = {{latitude: 37.78825,
+                              longitude: -122.4324}}
+                title={"place2"}
+                description={"description"}
+              />              
   
-  var mList = [blist,mboise];
+  var mlist=[blist,mboise];
 
-  const [markers, setMarks] = useState(mList);
+  const [markers, setMarks] = useState(mlist);
 
   // necessary functions for the <VirtualList> Component
   const getItemCount = (data) => list.length;
   const getItem = (data, index) => (list[index]);
 
   useEffect(() => {
-    if (list.length == 0) {
+    if (list.length == 0) 
+    {
       var urladdress = "https://cs.boisestate.edu/~scutchin/cs402/codesnips/loadjson.php?user=martinguzman"
-      const response = loadList(urladdress, list,setList,setMarks)
+      const response = loadList(urladdress, list,setlist,setMarks)
     }
 
   }, [list])
 
-  function load() {
+  function loadButton() {
     var urladdress = "https://cs.boisestate.edu/~scutchin/cs402/codesnips/loadjson.php?user=martinguzman"
-    const response = loadList(urladdress, list, setList)
+    const response = loadList(urladdress, list, setlist)
   }
 
 
-  function save() {
+  function saveButton() {
     var urladdress = "https://cs.boisestate.edu/~scutchin/cs402/codesnips/savejson.php?user=martinguzman";
     const response = saveList(urladdress, list);
     console.log(response);
@@ -62,7 +75,7 @@ const MapList = () => {
   }
 
   function plusButton() {
-    setShowMe(true);
+    setshowme(true);
   }
 
   function addLocation(alocation) {
@@ -81,13 +94,13 @@ const MapList = () => {
                   />
       newList = newList.concat(list);
       var marklist = markers.concat(amark);
-      setList(newList);
+      setlist(newList);
       setMarks(marklist);
     })
     .catch(error => console.warn(error));
   }
 
-  function deleteButton() {
+  function minusButton() {
     const newList = [];
     list.forEach((item) => {
       if (!item.selected) {
@@ -95,7 +108,7 @@ const MapList = () => {
       }
     })
 
-    setList(newList);
+    setlist(newList);
   }
 
   const renderItem = ({item, index}) => {
@@ -103,7 +116,8 @@ const MapList = () => {
     const color = item.selected ? 'white' : 'black';
     return (
       <Item item={item} 
-        onPress={()=> {toggleList(index)}} 
+        onPress={()=> {toggleList(index)}}
+        styles = {hikeListStyles}
         backgroundColor={{backgroundColor}} 
         textColor={{color}}
       />
@@ -117,8 +131,8 @@ const MapList = () => {
           item.selected=false;
         }
         else {
-          if(autoNav) {
-            mapRef.current.animateToRegion({latitude: item.latitude, longitude: item.longitude,
+          if(autonav) {
+            mapref.current.animateToRegion({latitude: item.latitude, longitude: item.longitude,
             latitudeDelta: 0.1, longitudeDelta: 0.1});
           }
           item.selected = true;
@@ -129,29 +143,30 @@ const MapList = () => {
       }
       return item;
     })
-    setList(newList);
+    setlist(newList);
   }
 
   // Create the logical and graphical representation of the page.
-  var buttonRow = <View style={styles.rowblock} >
-                    <View style={styles.buttonContainer}>
-                      <Button title="+" onPress={() => plusButton()} />
-                      <Button title="-" onPress={() => deleteButton()} />
-                      <Button title="Load" onPress={() => load()} />
-                      <Button title="Save" onPress={() => save()} />
-                      <Button title="Auto" onPress={() => setNav(!autoNav)} />
-                    </View>
-                  </View>;
+  var buttonrow=<View style={mainStyles.rowblock} >
+              <View style={mainStyles.buttonContainer}>
+                <Button title="+" onPress={() => plusButton()} />
+                <Button title="-" onPress={() => minusButton()} />
+                <Button title="Load" onPress={() => loadButton()} />
+                <Button title="Save" onPress={() => saveButton()} />
+                <Button title="Auto" onPress={() => setnav(!autonav)} />
+              </View>
+            </View>
 
-  var virtualList = <VirtualizedList  styles={styles.list}
-                                      data={emptyData}
-                                      initialNumToRender={4}
-                                      renderItem={renderItem}
-                                      keyExtractor={(item,index)=>index}
-                                      getItemCount={getItemCount}
-                                      getItem={getItem}/>;
+  var virtualList=<VirtualizedList styles={mainStyles.list}
+    data={emptyData}
+    initialNumToRender={4}
+    renderItem={renderItem}
+    keyExtractor={(item,index)=>index}
+    getItemCount={getItemCount}
+    getItem={getItem}
+      />
 
-  const mapRef = React.createRef();
+  const mapref = React.createRef();
   const SCREEN_WIDTH = useWindowDimensions().width;
   const SCREEN_HEIGHT = useWindowDimensions().height;
   var smaps = {width: SCREEN_WIDTH, height: SCREEN_HEIGHT/2}
@@ -159,38 +174,39 @@ const MapList = () => {
     smaps = {width: SCREEN_WIDTH, height: SCREEN_HEIGHT}
   }
 
-  var mymap=<MapView ref={mapRef} style={smaps} >
+  var mymap=<MapView ref={mapref} style={smaps} >
                 {markers}
             </MapView>    
 
-  var alist=<View style={styles.container} >
+  var alist=<View style={mainStyles.mainView} >
       {mymap}
-      {buttonRow}
+      {buttonrow}
       {virtualList}
-      <DialogInput isDialogVisible={aShowMe}
+      <DialogInput isDialogVisible={ashowme}
         title="Enter Address"
         message="Enter The Adress To Add"
-        submitInput={(inputText) => {setShowMe(false); addLocation(inputText)}}
-        closeDialog={()=>{setShowMe(false)}}
+        submitInput={(inputText) => {setshowme(false); addLocation(inputText)}}
+        closeDialog={()=>{setshowme(false)}}
         >
       <Text>Something</Text>
       </DialogInput>  
     </View>
 
-  var ablist =  <View style={styles.container}>
-                  <View>
-                    {buttonRow}
-                    {virtualList}
-                    <DialogInput  isDialogVisible={aShowMe}
-                                  title="EnterAddress"
-                                  message="Enter The Address To Add"
-                                  submitInput={(inputText) => {setShowMe(false); addLocation(inputText)}}
-                                  closeDialog={()=>{setShowMe(false)}}>
-                      <Text>Something</Text>
-                    </DialogInput>
-                  </View>
-                  {mymap}
-                </View>
+  var ablist = <View style={mainStyles.mainView}>
+    <View>
+      {buttonrow}
+      {virtualList}
+      <DialogInput isDialogVisible={ashowme}
+        title="Enter Address"
+        message="Enter The Address To Add"
+        submitInput={(inputText) => {setshowme(false); addLocation(inputText)}}
+        closeDialog={()=>{setshowme(false)}}
+        >
+      <Text>Something</Text>
+      </DialogInput>
+      </View>
+      {mymap}
+      </View>
 
   if (SCREEN_WIDTH>SCREEN_HEIGHT) {
     return ablist;
@@ -198,44 +214,5 @@ const MapList = () => {
 
   return (alist)
 }
-
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#FFF",
-    alignItems: 'center',
-  },
-  buttonContainer: {
-    flex: 1,
-    flexDirection: 'row',
-    allignItems: 'center',
-    justifyContent: 'center',
-    maxHeight: 35,
-    minHeight: 35,
-    backgroundColor: "#FFF",
-    alignItems: 'center',
-  },
-  list: {
-    flex: 20,
-    paddingTop: 5,
-    backgroundColor: "gray",
-    borderWidth: 5,
-  },
-  rowblock: {
-    height: 80,
-    width: 300,
-    padding: 15,
-    borderWidth: 2,
-  },
-  buttonContainer: {
-    flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
-    borderWidth: 5,
-    padding: 0,
-    paddingTop: 0,
-  },
-});
 
 export default MapList
