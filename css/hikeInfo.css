@@ -1,22 +1,23 @@
 /**
- * styles.css
- * Description: Contains the .css stylization 
- * for the hikes list tab.
+ * main.css
+ * Description: The main styles organizer of all elements in the app screen.
+ * Stylizes the map container, buttons container, hike list container, and
+ * hike info container.
  */
  
 import {StyleSheet} from 'react-native';
 
-const hikeListStyles=StyleSheet.create({
-
+const hikeInfoStyles=StyleSheet.create({
+  
   // Container of the hike info view
   mainView: {
     flex: 1,
-    backgroundColor: "#FFF",
+    backgroundColor: "#8FA",
     alignItems: 'center',
   },
 
   // Container of the buttons
-  buttonContainer: {
+  innerButtonView: {
     flex: 1,
     flexDirection: 'row',
     allignItems: 'center',
@@ -24,24 +25,18 @@ const hikeListStyles=StyleSheet.create({
     maxHeight: 35,
     minHeight: 35,
     alignItems: 'center',
-  },
-
-// List container
-  list: {
-    flex: 20,
-    paddingTop: 5,
-    backgroundColor: "blue",
-    borderWidth: 5,
+    backgroundColor: "#F00"
   },
 
   // Row container
-  rowblock: {
+  outerButtonView: {
     height: 80,
     padding: 10,
+    backgroundColor: "#FFF"
   },
 
 
 });
 
 
-export {hikeListStyles}
+export {hikeInfoStyles}
