@@ -12,8 +12,9 @@ const mainStyles = StyleSheet.create({
   // Container of the entire view
   mainView: {
     flex: 1,
-    backgroundColor: "#8FA",
+    backgroundColor: "blue",
     alignItems: 'center',
+
   },
 
   // Container of the buttons
