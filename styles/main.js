@@ -4,11 +4,11 @@
  * Stylizes the map container, buttons container, hike list container, and
  * hike info container.
  */
- 
-import {StyleSheet} from 'react-native';
 
-const mainStyles=StyleSheet.create({
-  
+import { StyleSheet } from 'react-native';
+
+const mainStyles = StyleSheet.create({
+
   // Container of the entire view
   mainView: {
     flex: 1,
@@ -27,7 +27,7 @@ const mainStyles=StyleSheet.create({
     alignItems: 'center',
   },
 
-// List container
+  // List container
   list: {
     flex: 20,
     paddingTop: 5,
@@ -46,4 +46,4 @@ const mainStyles=StyleSheet.create({
 });
 
 
-export {mainStyles}
+export { mainStyles }
