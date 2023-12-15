@@ -3,8 +3,8 @@ import { Marker } from 'react-native-maps';
 
 
 
-async function loadList(aurl,alist,asetlist/*,asetm*/) {
-  const response = await fetch(aurl)
+async function loadList(aurl,alist,asetlist,asetm) {
+  const response = await fetch(aurl);
   const names = await response.json();
   names.forEach((item) => {alist.push(item);})
 
@@ -19,6 +19,8 @@ async function loadList(aurl,alist,asetlist/*,asetm*/) {
   })
   asetlist(newList);
   //asetm(mList);
+
+
 }
 
 async function saveList(aurl, list) {
@@ -27,8 +29,8 @@ async function saveList(aurl, list) {
                           body: JSON.stringify(list),
   };
   const response = await fetch(aurl, requestOptions);
-  console.log(response);
-  console.log("save worked");
+  //console.log(response);
+  //console.log("save worked");
 }
 
 export {loadList}
