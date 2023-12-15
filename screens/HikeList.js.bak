@@ -11,7 +11,6 @@ import Geocoder from 'react-native-geocoding';
 // Import utilities
 import {loadButton, saveButton} from '../components/Buttons.js';
 import {Item} from '../components/ListItem.js';
-import {loadList, saveList} from '../components/RemoteAccess.js'
 
 // Import Styles
 import {hikeListStyles} from '../styles/hikeList.js';
@@ -41,19 +40,6 @@ const HikeList = () => {
 
   }, [list])
 
-
-async function loadFromServerButton() {
-  var urladdress = "https://cs.boisestate.edu/~scutchin/cs402/codesnips/loadjson.php?user=martinguzman"
-  const response = loadList(urladdress, list, setlist)
-  console.log("loadButton() used")
-}
-
-async function saveToServerButton() {
-  var urladdress = "https://cs.boisestate.edu/~scutchin/cs402/codesnips/savejson.php?user=martinguzman";
-  const response = saveList(urladdress, list);
-  console.log(response);
-  console.log("saveButton() used")
-}
 
   function minusButton() {
     const newList = [];
@@ -86,11 +72,11 @@ async function saveToServerButton() {
           item.selected=false;
         }
         else {
-          //if(autonav) {
+          if(autonav) {
             // This code directly below moves the camera to the given location!
             //mapref.current.animateToRegion({latitude: item.latitude, longitude: item.longitude,
             //latitudeDelta: 0.1, longitudeDelta: 0.1});
-          //}
+          }
           item.selected = true;
         }
       }
@@ -109,8 +95,8 @@ async function saveToServerButton() {
     <View style={hikeListStyles.rowblock}>
       <View style={hikeListStyles.buttonContainer}>
         <Button title="Remove Hike" onPress={() => minusButton()} />
-        <Button title="Save To Server" onPress={() => saveToServerButton()} />
-        <Button title="Load From Server" onPress={() => loadFromServerButton()} />
+        <Button title="Save To Server" onPress={() => saveButton()} />
+        <Button title="Load From Server" onPress={() => loadButton()} />
       </View>
     </View>
 

@@ -16,7 +16,7 @@ import Geocoder from 'react-native-geocoding';
 
 
 // Import 
-import { loadList, saveList } from '../components/RemoteAccess';
+import { loadButton, saveButton } from '../components/Buttons.js';
 import { hikeInfoStyles } from '../styles/hikeInfo.js';
 
 var emptyData = [];
@@ -30,28 +30,6 @@ const HikeView = () => {
     const [list, setlist] = useState([]); // Use to track hikes on this tab?
     const [ashowme, setshowme] = useState(false); // Useful for showing dialog prompt
     const [markers, setMarks] = useState([]); // Useful for showing markers on map
-
-  useEffect(() => { // Does this execute on startup?
-    if (list.length == 0) 
-    {
-      // var urladdress = "https://cs.boisestate.edu/~scutchin/cs402/codesnips/loadjson.php?user=martinguzman"
-      // const response = loadList(urladdress, list,setlist,setMarks)
-    }
-
-  }, [list])
-
-async function loadFromServerButton() {
-  var urladdress = "https://cs.boisestate.edu/~scutchin/cs402/codesnips/loadjson.php?user=martinguzman"
-  const response = loadList(urladdress, list, setlist)
-  console.log("loadButton() used")
-}
-
-async function saveToServerButton() {
-  var urladdress = "https://cs.boisestate.edu/~scutchin/cs402/codesnips/savejson.php?user=martinguzman";
-  const response = saveList(urladdress, list);
-  console.log(response);
-  console.log("saveButton() used")
-}
 
     function plusButton() {
         setshowme(true);
@@ -97,8 +75,8 @@ async function saveToServerButton() {
         <View style={hikeInfoStyles.outerButtonView} >
             <View style={hikeInfoStyles.innerButtonView}>
                 <Button title="Add hike" onPress={() => plusButton()} />
-                <Button title="Select Prev Hike" onPress={() => loadToServerButton()} />
-                <Button title="Save Current Hike" onPress={() => saveToServerButton()} />
+                <Button title="Select Prev Hike" onPress={() => loadButton()} />
+                <Button title="Save Current Hike" onPress={() => saveButton()} />
             </View>
         </View>
 
