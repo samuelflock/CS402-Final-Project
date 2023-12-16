@@ -18,7 +18,16 @@ const Tab = createBottomTabNavigator();
 const HikingApp = () => {
   return (
     <NavigationContainer>
-      <Tab.Navigator>
+      <Tab.Navigator
+        screenOptions={{
+          tabBarLabelPosition: "beside-icon",
+          tabBarLabelStyle: {
+            fontWeight: "700",
+            fontSize: 15,
+          },
+          tabBarIconStyle: { display: "none" },
+        }}
+      >
         <Tab.Screen name="Current Hike" component={HikeView} />
         <Tab.Screen name="Past Hikes" component={HikeList} />
       </Tab.Navigator>
