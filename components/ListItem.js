@@ -1,19 +1,19 @@
-/**
- * listItem.js
- * Description: Acts as the list item for each hike entry on the 
- * hike list. Is a button itself and can be pressed to select 
- * for deletion.
- */
+import React from "react";
+import { TouchableOpacity, Text } from "react-native";
 
-import * as React from 'react'
-import { TouchableOpacity, Text } from 'react-native';
-
-
-const Item = ({ item, onPress, styles, backgroundColor, textColor }) => (
-  <TouchableOpacity onPress={onPress} style={[styles.item, backgroundColor]}>
-    <Text style={[styles.title, textColor]}>{item.key}</Text>
-    <Text style={[styles.title]}></Text>
+const Item = ({ item, onPress, backgroundColor, textColor }) => (
+  <TouchableOpacity
+    onPress={onPress}
+    style={{
+      backgroundColor: backgroundColor,
+      paddingHorizontal: 20,
+      paddingVertical: 10,
+      borderBottomWidth: 1,
+      borderBottomColor: "black",
+    }}
+  >
+    <Text style={{ color: textColor }}>{item.key}</Text>
   </TouchableOpacity>
 );
 
-export { Item }
+export { Item };

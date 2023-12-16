@@ -4,39 +4,43 @@
  * Stylizes the map container, buttons container, hike list container, and
  * hike info container.
  */
- 
-import {StyleSheet} from 'react-native';
 
-const hikeInfoStyles=StyleSheet.create({
-  
-  // Container of the hike info view
+import { StyleSheet } from "react-native";
+
+const hikeInfoStyles = StyleSheet.create({
   mainView: {
     flex: 1,
-    backgroundColor: "#8FA",
-    alignItems: 'center',
+    alignItems: "center",
   },
-
-  // Container of the buttons
-  innerButtonView: {
-    flex: 1,
-    flexDirection: 'row',
-    allignItems: 'center',
-    justifyContent: 'center',
-    maxHeight: 35,
-    minHeight: 35,
-    alignItems: 'center',
-    backgroundColor: "#F00"
+  mapStyle: {
+    width: "100%",
+    height: "50%",
   },
-
-  // Row container
-  outerButtonView: {
-    height: 80,
+  buttonRow: {
+    flexDirection: "row",
+    justifyContent: "space-around",
+    width: "100%",
     padding: 10,
-    backgroundColor: "#FFF"
   },
-
-
+  hikeInfo: {
+    padding: 20,
+    backgroundColor: "#FFF",
+    borderRadius: 10,
+    elevation: 3,
+    shadowOffset: { width: 1, height: 1 },
+    shadowColor: "#333",
+    shadowOpacity: 0.3,
+    shadowRadius: 2,
+    marginVertical: 10,
+  },
+  hikeTitle: {
+    fontSize: 20,
+    fontWeight: "bold",
+    marginBottom: 5,
+  },
+  hikeCoords: {
+    fontSize: 16,
+  },
 });
 
-
-export {hikeInfoStyles}
+export default hikeInfoStyles;

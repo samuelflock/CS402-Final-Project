@@ -1,16 +1,20 @@
-
-import { StyleSheet } from 'react-native';
+import { StyleSheet } from "react-native";
 
 const hikeListStyles = StyleSheet.create({
-  item: {
-    padding: 0,
-    fontSize: 12,
-    height: 44,
+  mainView: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 10,
   },
-  title: {
-    fontSize: 22,
-  }
+  buttonsContainer: {
+    flexDirection: "column",
+    justifyContent: "space-around",
+   
+  },
+  list: {
+    width: "100%",
+  },
 });
 
-
-export { hikeListStyles }
+export default hikeListStyles;

@@ -1,0 +1,1 @@
+export const GEOCODER_API_KEY = "AIzaSyDqW8jK0xxnIRKTKXACxIK-q3UerQTiCsA";

@@ -1,135 +1,77 @@
-/**
- * HikeList.js
- * Description: Contains complex tags that display information relevant to a 
- * list of saved hikes. Contains many buttons to alter this list.
- */
-import React, {useState, useEffect} from 'react';
-import { VirtualizedList, Button, View} from 'react-native';
-import Geocoder from 'react-native-geocoding';
+import React, { useState, useEffect } from "react";
+import { Button, View, VirtualizedList, Alert } from "react-native";
+import Geocoder from "react-native-geocoding";
+import { Item } from "../components/ListItem.js";
+import hikeListStyles from "../styles/hikeList.js";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { GEOCODER_API_KEY } from "../constants.js";
 
-
-// Import utilities
-import {loadButton, saveButton} from '../components/Buttons.js';
-import {Item} from '../components/ListItem.js';
-import {loadList, saveList} from '../components/RemoteAccess.js'
-
-// Import Styles
-import {hikeListStyles} from '../styles/hikeList.js';
-
-var emptyData = [];
-Geocoder.init("AIzaSyDqW8jK0xxnIRKTKXACxIK-q3UerQTiCsA");
-
+Geocoder.init(GEOCODER_API_KEY);
 
 const HikeList = () => {
+  const [list, setList] = useState([]);
 
-  // Declare state variables
-  const[list, setlist] = useState([]); // Useful for setting the list of
-
-  // necessary functions for the <VirtualList> Component
-  const getItemCount = (data) => list.length;
-  const getItem = (data, index) => (list[index]);
-
-
-// Pass emptyData to VirtualList on initilaization
-
-  useEffect(() => { // Does this execute on startup?
-    if (list.length == 0) 
-    {
-      // var urladdress = "https://cs.boisestate.edu/~scutchin/cs402/codesnips/loadjson.php?user=martinguzman"
-      // const response = loadList(urladdress, list,setlist,setMarks)
-    }
-
-  }, [list])
-
-
-async function loadFromServerButton() {
-  var urladdress = "https://cs.boisestate.edu/~scutchin/cs402/codesnips/loadjson.php?user=martinguzman"
-  const response = loadList(urladdress, list, setlist)
-  console.log("loadButton() used")
-}
-
-async function saveToServerButton() {
-  var urladdress = "https://cs.boisestate.edu/~scutchin/cs402/codesnips/savejson.php?user=martinguzman";
-  const response = saveList(urladdress, list);
-  console.log(response);
-  console.log("saveButton() used")
-}
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const storedHikes = await AsyncStorage.getItem("hikes");
+        setList(storedHikes !== null ? JSON.parse(storedHikes) : []);
+      } catch (error) {
+        Alert.alert("Error", "Failed to load hikes from storage.");
+      }
+    };
+    fetchData();
+  }, []);
 
   function minusButton() {
-    const newList = [];
-    list.forEach((item) => {
-      if (!item.selected) {
-        newList.push(item);
-      }
-    })
-
-    setlist(newList);
+    const updatedList = list.filter((item) => !item.selected);
+    setList(updatedList);
+    saveHikesToStorage(updatedList);
   }
 
-  const renderHikeEntry = ({item, index}) => {
-    const backgroundColor = item.selected ? 'black' : 'white';
-    const color = item.selected ? 'white' : 'black';
-    return (
-      <Item item={item} 
-        onPress={()=> {toggleList(index)}}
-        styles = {hikeListStyles}
-        backgroundColor={{backgroundColor}} 
-        textColor={{color}}
-      />
+  async function saveHikesToStorage(hikes) {
+    try {
+      const jsonValue = JSON.stringify(hikes);
+      await AsyncStorage.setItem("hikes", jsonValue);
+      console.log("Updated hikes saved to AsyncStorage");
+    } catch (error) {
+      Alert.alert("Error", "Failed to save updated hikes to storage.");
+    }
+  }
+  function toggleList(index) {
+    setList(
+      list.map((item, idx) => ({
+        ...item,
+        selected: idx === index ? !item.selected : item.selected,
+      }))
     );
   }
-  
-  function toggleList(aindex){
-    const newList = list.map((item, index) => {
-      if (aindex == index) {
-        if (item.selected) {
-          item.selected=false;
-        }
-        else {
-          //if(autonav) {
-            // This code directly below moves the camera to the given location!
-            //mapref.current.animateToRegion({latitude: item.latitude, longitude: item.longitude,
-            //latitudeDelta: 0.1, longitudeDelta: 0.1});
-          //}
-          item.selected = true;
-        }
-      }
-      else{
-        item.selected=false;
-      }
-      return item;
-    })
-    setlist(newList);
-  }
 
+  const renderHikeEntry = ({ item, index }) => (
+    <Item
+      item={item}
+      onPress={() => toggleList(index)}
+      styles={hikeListStyles}
+      backgroundColor={item.selected ? "black" : "white"}
+      textColor={item.selected ? "white" : "black"}
+    />
+  );
 
-
-  /* Assemble the subparts of the tab below into the "hikesList" tab! */
-  var buttonrow=
-    <View style={hikeListStyles.rowblock}>
-      <View style={hikeListStyles.buttonContainer}>
-        <Button title="Remove Hike" onPress={() => minusButton()} />
-        <Button title="Save To Server" onPress={() => saveToServerButton()} />
-        <Button title="Load From Server" onPress={() => loadFromServerButton()} />
-      </View>
-    </View>
-
-  var virtualList=
-    <VirtualizedList styles={hikeListStyles.list} data={emptyData}
-                                              initialNumToRender={4}
-                                              renderItem={renderHikeEntry}
-                                              keyExtractor={(item,index)=>index}
-                                              getItemCount={getItemCount}
-                                              getItem={getItem}/>
-
-  // Note: Variable "hikesList" is the container for this entire tab!
-  var hikesList=
+  return (
     <View style={hikeListStyles.mainView}>
-      {buttonrow}
-      {virtualList}
+      <View style={hikeListStyles.buttonsContainer}>
+        <Button title="Remove Hike" onPress={minusButton} color="#F44336" />
+      </View>
+      <VirtualizedList
+        initialNumToRender={4}
+        renderItem={renderHikeEntry}
+        keyExtractor={(item, index) => `item-${index}`}
+        getItemCount={() => list.length}
+        getItem={(data, index) => list[index]}
+        style={hikeListStyles.list}
+      />
     </View>
+  );
+};
 
-  return (hikesList)
-}
-
-export {HikeList}
+export { HikeList };
