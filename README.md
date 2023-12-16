@@ -1,5 +1,5 @@
 # Hiking Application
-## App that allows users to track and view their hikes using phone GPS data
+## App that allows users to track and view their hikes using phone GPS data (see user manual pdf)
 ### Authors
 - Aidan Scudder
 - Martin Guzman
